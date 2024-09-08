@@ -1,0 +1,20 @@
+@import '/src/theme/scss-vars.scss';
+
+
+.app-navbars-container {
+    color: $text-color1;
+}
+
+.app-navbars {
+    background-color: $bg-color1;
+    color: $text-color1;
+    
+    a,
+    button {
+        color: $text-color1;
+    }
+
+    button {
+        background-color: transparent;
+    }
+}

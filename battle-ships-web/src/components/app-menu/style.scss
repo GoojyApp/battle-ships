@@ -1,0 +1,14 @@
+@import '/src/theme/scss-vars.scss';
+
+.app-menu {
+    background-color: $bg-color1;
+    .list-group-item {
+        background-color: $bg-color1;
+        color: $text-color1;
+        border: 0;
+        cursor: pointer;
+        &:hover {
+            color: $text-color1-hover;
+        }
+    }
+}
