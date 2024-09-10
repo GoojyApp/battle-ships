@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { appPages } from '../../constants/pages'
 
 const initialState = {
-    pages: [],
-    selectedPageId: 1,
+    pages: Object.values(appPages),
+    selectedPageId: appPages.HOME.id,
 }
 
 const navigationSlice = createSlice({
@@ -13,9 +14,13 @@ const navigationSlice = createSlice({
       state.selectedPageId = action.payload
     },
   },
+  selectors: {
+    getPages: (state) => state.pages,
+    getSelectedPage: (state) => state.pages.find(p => p.id === state.selectedPageId)
+  }
 })
 
 // Action creators are generated for each case reducer function
 export const { setPage } = navigationSlice.actions
-
+export const navigationSelectors = navigationSlice.selectors
 export default navigationSlice

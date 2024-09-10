@@ -15,9 +15,10 @@ const AppNavbars = (props) => {
         <Navbar expand="lg" className="app-navbars">
       <Container>
         <NavigationMenu/>
-        <Navbar.Brand href="#home">GoojyApp</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        {/* <Navbar.Collapse id="basic-navbar-nav">
+        <div>GoojyApp</div>
+        {/* <Navbar.Brand href="#home">GoojyApp</Navbar.Brand> */}
+        {/* <Navbar.Toggle />
+        <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="#home">Home</Nav.Link>
             <Nav.Link href="#link">Link</Nav.Link>
