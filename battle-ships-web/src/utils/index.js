@@ -8,3 +8,10 @@ export const createMatrix = (size, onCreateCell) => {
 }
 
 export const deepCopy = (obj) => fromJS(obj).toJS()
+
+export const removeItem = (lst, index) => {
+    if (!Array.isArray(lst) || typeof index !== 'number') return
+    const copy = [...lst]
+    delete copy[index]
+    return copy.filter(item => item !== undefined)
+}

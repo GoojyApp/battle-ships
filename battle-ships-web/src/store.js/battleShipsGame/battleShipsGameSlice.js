@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { createNewBoard, createShips } from '../../games/battle-ships/battleShipsUtils'
+import { createNewBoard, createShips, updateReadyShipOnBoard } from '../../games/battle-ships/battleShipsUtils'
 
 const initialState = {
     id: 1,
@@ -15,13 +15,16 @@ const battleShipsGameSlice = createSlice({
       const { id } = action.payload
       const index = state.ships.findIndex(s => s.id === id)
       if (index !== -1) {
-        state.ships[index] = action.payload
+        const ship = { ...action.payload, ready: true }
+        state.ships[index] = ship
+        updateReadyShipOnBoard(state.board, ship)
       }
     },
   },
   selectors: {
     getBoard: (state) => state.board,
     getShips: (state) => state.ships,
+    getIsGameReady: (state) => state.ships.every((s) => s.ready),
   }
 })
 

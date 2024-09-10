@@ -37,9 +37,15 @@
 }
 
 .ship {
-    border: 1px darkcyan solid;
+    border: 1px rgba(85, 98, 98, 0.5) solid;
     margin: 12px;
+    cursor: pointer;
     &.selected {
+        border: 1px rgba(85, 98, 98, 1) solid;
+    }
+    &.ready {
+        cursor: default;
+        border: none;
         background-color: greenyellow;
     }
 }

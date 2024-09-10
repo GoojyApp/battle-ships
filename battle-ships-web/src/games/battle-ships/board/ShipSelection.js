@@ -1,18 +1,24 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import './style.scss'
 
 
 const Ship = (props) => {
-    const { size, selected } = props;
+    const { size, selected, ready } = props;
 
     const handleClick = useCallback(() => {
-        const { onClick, ...rest } = props
+        const { onClick, selected, ...rest } = props
         onClick?.(rest)
     }, [props])
 
+    const classNames = useMemo(() => {
+        const cs1 = selected ? 'selected' : ''
+        const cs2 = ready ? 'ready' : ''
+        return `ship ${cs1} ${cs2}`
+    }, [ready, selected])
+
     return (
         <div 
-            className={`ship ${selected ? 'selected' : ''}`}
+            className={classNames}
             onClick={handleClick}
             style={{ width: 30 * size, height: 30 }}
         >

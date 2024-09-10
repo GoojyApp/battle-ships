@@ -94,9 +94,11 @@ const getValidEditPosition = (orientation, board, position) => {
     return cells
 }
 
-export const getCellsEditableOnBoard = (board, position) => {
+export const getCellsEditableOnBoard = (board, ship) => {
     let emptyCells = []
     let nextValidPosition = undefined
+    if (!ship) return emptyCells
+    const { position } = ship
     if (position.length) {
         const orientation = getShipOrientation(position)
         nextValidPosition = getValidEditPosition(orientation, board, position)
@@ -112,7 +114,7 @@ export const getCellsEditableOnBoard = (board, position) => {
     return nextValidPosition ?? emptyCells
 }
 
-export const editShipPositionOnBoard = (board, ship) => {
+export const editPositionOnBoard = (board, ship) => {
     const copy = board.map((row) => row.map((column) => ({ ...column })))
     ship.position.forEach(({ rIndex, cIndex }) => {
         const cell = copy[rIndex][cIndex]
@@ -132,4 +134,18 @@ export const setShipPositionOnBoard = (board, ship) => {
     setShipMarginOnBoard(copy, ship)
     // printMatrix(copy)
     return copy
+}
+
+export const setShipOnBoard = (board, ship) => {
+    ship.position.forEach(({ rIndex, cIndex }) => {
+        const cell = board[rIndex][cIndex]
+        cell.shipId = ship.id
+        cell.type = cellType.SHIP
+    });
+    // printMatrix(copy)
+}
+
+export const updateReadyShipOnBoard = (board, ship) => {
+    setShipOnBoard(board, ship)
+    setShipMarginOnBoard(board, ship)
 }
