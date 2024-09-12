@@ -1,41 +1,44 @@
 import { useMemo, useCallback, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getCellsEditableOnBoard } from '../battleShipsUtils'
+import { getCellsEditableOnBoard, randomPositionOnBoard } from '../battleShipsUtils'
 import { deepCopy, removeItem } from '../../../utils'
-import { setShip } from '../../../store.js/battleShipsGame/battleShipsGameSlice'
+import { getIsPrepare, setShip } from '../../../store.js/battleShipsGame/battleShipsGameSlice'
 import { cellType } from '../constants'
 import ShipSelection from './ShipSelection'
 import BattleZone from './BattleZone'
 import './style.scss'
 
 
-
 const PreparingBoard = (props) => {
-
-    const {
-        board,
-        ships
-    } = props
 
     const dispatch = useDispatch()
 
+    const { board, ships } = props
+
+    const isPrepare = useSelector(getIsPrepare)
     const [editShip, setEditShip] = useState()
-
-    const editAbleCells = getCellsEditableOnBoard(board, editShip)
-
+    
+    useEffect(() => {
+        if (!editShip || editShip.ready) return
+        if (editShip.position.length === editShip.size) {
+            // Edit done
+            dispatch(setShip({...editShip}))
+            setEditShip()
+        }
+    }, [editShip, dispatch])
+    
     const onClickShip = useCallback((ship) => {
         if (ship.ready) return
         setEditShip(deepCopy(ship))
     }, [])
 
-    useEffect(() => {
-        if (!editShip || editShip.ready) return
-        if (editShip.position.length === editShip.size) {
-            // Edit done
-            dispatch(setShip(editShip))
-        }
-    }, [editShip, dispatch])
-
+    const onClickRandom = useCallback(() => {
+        const res = randomPositionOnBoard(deepCopy(board), deepCopy(ships))
+        res.ships.forEach((ship) => {
+            dispatch(setShip(ship))
+        })
+    }, [board, ships, dispatch])
+    
     const onClickCell = useCallback(({ rIndex, cIndex, id }) => {
         if (!editShip || editShip.position.length >= editShip.size) return
         /*
@@ -54,6 +57,8 @@ const PreparingBoard = (props) => {
 
     const editedBoard = useMemo(() => {
         const editedBoard = deepCopy(board)
+        const editAbleCells = getCellsEditableOnBoard(board, editShip)
+
         editedBoard.forEach(row => {
             row.forEach(cell => {
                 const editedCell = editShip?.position.find((p) => p.id === cell.id)
@@ -62,11 +67,11 @@ const PreparingBoard = (props) => {
             })
         });
         return editedBoard
-    }, [board, editAbleCells, editShip])
+    }, [board, editShip])
 
     return (
         <div
-            className='board'
+            className='preparing-board board'
         >
             <BattleZone
                 board={editedBoard}
@@ -76,6 +81,7 @@ const PreparingBoard = (props) => {
                 onClick={onClickShip}
                 ships={ships}
                 selected={editShip}
+                onClickRandom={onClickRandom}
             />
         </div>
     )

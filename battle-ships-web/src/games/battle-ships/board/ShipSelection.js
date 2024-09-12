@@ -29,7 +29,7 @@ const Ship = (props) => {
 
 const ShipSelection = (props) => {
 
-    const { onClick, ships, selected } = props
+    const { onClick, ships, selected, onClickRandom } = props
 
     const shipsUI = ships.map((ship, i) => (
         <Ship
@@ -42,7 +42,8 @@ const ShipSelection = (props) => {
 
     return (
         <div className='ship-kinds'>
-            Select Ship and place it on the board!
+            Select and place ship on board or click for random position
+            <button onClick={onClickRandom}>Random</button>
             <div className='ships-wrapper'>
                 {shipsUI}
             </div>

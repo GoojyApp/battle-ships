@@ -7,7 +7,28 @@
 }
 
 .battle-zone {
+    padding: 20px;
+    max-width: 600px;
+    max-height: 600px;
 
+    .battle-cell {
+        &.has-ship-part {
+            background-color: greenyellow;
+        }
+        &.hit {
+            background-color: red;
+        }
+        &.hidden {
+            background-color: grey;
+        }
+    }
+}
+
+.battle-zone-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
 }
 
 .battle-row {
@@ -18,18 +39,20 @@
     width: 50px;
     height: 50px;
     border: 1px sandybrown solid;
-    &.has-ship-part {
-        background-color: greenyellow;
-    }
-    &.disabled {
-        opacity: 0.3;
+    flex: 0 1 auto;
+}
+
+.preparing-board {
+    .battle-cell {
+        &.disabled {
+            opacity: 0.3;
+        }
     }
 }
 
 .ship-kinds {
     background-color: azure;
     width: 100%;
-    // flex: 1 1 auto;
 }
 
 .ships-wrapper {

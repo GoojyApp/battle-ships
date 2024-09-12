@@ -22,6 +22,7 @@ function AppMenu() {
       <ListGroup.Item
         onClick={onClickItem}
         id={appPages.BATTLE_SHIPS.id}
+        active={appPages.BATTLE_SHIPS.id === selectedPage.id}
       >
         Battle ships
       </ListGroup.Item>

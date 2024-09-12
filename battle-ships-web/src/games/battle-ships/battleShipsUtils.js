@@ -1,20 +1,75 @@
-import { createMatrix } from "../../utils"
-import { cellType, cellStatus } from "./constants"
+import { createMatrix, removeItem } from "../../utils"
+import { cellState, cellType, orientations } from "./constants"
 
 
 
-export const createNewBoard = (size) => {
+export const createNewBoard = (size, cellData) => {
     const board = createMatrix(size, (rIndex, cIndex) => ({ 
-        rIndex, 
+        id: `${rIndex},${cIndex}`,
+        rIndex,
         cIndex,
         type: cellType.EMPTY,
-        id: `${rIndex},${cIndex}`
+        ...cellData
     }))
     return board
 }
 
 export const createShips = (shipSizes = [5, 4, 3, 2]) => {
-    return shipSizes.map((size, i) => ({ size, id: i + 1, position: [] }))
+    return shipSizes.map((size, i) => createShip(size, i + 1))
+}
+
+export const createShip = (size, id) => {
+    return { size, id, position: [] }
+}
+
+export const randomPositionOnBoard = (board, ships) => {
+    ships.forEach((ship) => {
+        const cells = getCellsEditableOnBoard(board, ship)
+        const position = getRandomPositionOnBoard(ship.size, board, cells)
+        ship.position = position ?? []
+        updateReadyShipOnBoard(board, ship)
+        // printMatrix(board)
+    })
+    return { board, ships }
+}
+
+const getRandomPositionOnBoard = (size, board, cells) => {
+
+    if (!cells.length) return
+
+    let cellsLeft = [...cells]
+    const index = ~~(Math.random() * cellsLeft.length)
+    const randomCell = cellsLeft[index]
+    cellsLeft = removeItem(cellsLeft, index)
+    const orientation = [orientations.HORIZONTAL, orientations.VERTICAL]
+    let orientationIndex = ~~(Math.random() * 2)
+
+    const position = getPositionFrom(randomCell, size, board, orientation[orientationIndex]) ?? 
+        getPositionFrom(randomCell, size, board, orientation[(orientationIndex + 1) % 2])
+    if (!position) return getRandomPositionOnBoard(size, board, cellsLeft)
+
+    return position
+}
+
+const getPositionFrom = (from, size, board, orientation) => {
+    const position = []
+    let rIndex = from.rIndex
+    let cIndex = from.cIndex
+    for (let i = 0; i < size; i++) {
+        if (orientation === orientations.HORIZONTAL) {
+            cIndex++
+        } else {
+            rIndex++
+        }
+        const cell = board[rIndex]?.[cIndex]
+        if (!isValidCellPosition(cell)) return
+        position.push(cell)
+    }
+    return position
+}
+
+const isValidCellPosition = (cell) => {
+    return cell && cell.type === cellType.EMPTY
 }
 
 const printMatrix = (matrix) => {
@@ -112,28 +167,6 @@ export const getCellsEditableOnBoard = (board, ship) => {
         })
     }
     return nextValidPosition ?? emptyCells
-}
-
-export const editPositionOnBoard = (board, ship) => {
-    const copy = board.map((row) => row.map((column) => ({ ...column })))
-    ship.position.forEach(({ rIndex, cIndex }) => {
-        const cell = copy[rIndex][cIndex]
-        copy[rIndex][cIndex] = { ...cell, shipId: ship.id, type: cellType.SHIP }
-    });
-    // printMatrix(copy)
-    return copy
-}
-
-export const setShipPositionOnBoard = (board, ship) => {
-    const copy = board.map((row) => row.map((column) => ({ ...column })))
-    ship.position.forEach(({ rIndex, cIndex }) => {
-        const cell = copy[rIndex][cIndex]
-        cell.shipId = ship.id
-        cell.type = cellType.SHIP
-    });
-    setShipMarginOnBoard(copy, ship)
-    // printMatrix(copy)
-    return copy
 }
 
 export const setShipOnBoard = (board, ship) => {

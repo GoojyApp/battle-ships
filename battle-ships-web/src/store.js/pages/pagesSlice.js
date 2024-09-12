@@ -3,7 +3,7 @@ import { appPages } from '../../constants/pages'
 
 const initialState = {
     pages: Object.values(appPages),
-    selectedPageId: appPages.HOME.id,
+    selectedPageId: appPages.BATTLE_SHIPS.id,
 }
 
 const navigationSlice = createSlice({

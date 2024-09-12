@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import './style.scss'
 import AppMenu from '../app-menu/AppMenu';
+import './style.scss'
 
 
 function NavigationMenu() {
